@@ -4,7 +4,8 @@ let enabledDraw = true;
 const prizesEl = document.querySelector(".draw-prizes");
 
 let lottery = new Lottery(prizesEl, {
-  pits: PRIZE_COUNT
+  pits: PRIZE_COUNT,
+  angles: [60, 60, 60, 60, 60, 60]
 });
 
 lottery.onEnded = function(ins, index, prizeIndexes) {

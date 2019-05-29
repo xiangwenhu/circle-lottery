@@ -1,7 +1,11 @@
 (function() {
+  var proto = Object.prototype;
   var _ = {
     isFunction: function isFunction(fn) {
       return typeof fn === "function" || fn instanceof Function;
+    },
+    isArray: function(obj) {
+      return proto.toString.call(obj) === "[object Array]";
     },
     extend: function extend(target) {
       if (arguments.length < 2) {
@@ -135,17 +139,36 @@
     var options = this.options;
     var prizeIndex = this.prizeIndexes[0];
     var baseDeg = _.getRatoteAngle(this.el);
+    var deviationAngle = this.getDeviation();
+    var deg =
+      CIRCLR_ANGLE *
+        (options.minCycles + Math.trunc(options.pits * Math.random())) +
+      deviationAngle; // 命令目标的偏差角度
+
+    this.lastIndex = prizeIndex;
+    return baseDeg + deg;
+  };
+
+  Lottery.prototype.getDeviation = function() {
+    var options = this.options;
+    var angles = options.angles;
+    var prizeIndex = this.prizeIndexes[0];
+    // 角度一致
     var extra =
       prizeIndex >= this.lastIndex
         ? prizeIndex - this.lastIndex
         : options.pits + prizeIndex - this.lastIndex;
-    var deg =
-      360 * options.minCycles + // 最小圈数
-      360 * Math.trunc(options.pits * Math.random()) + // 随机圈数
-      (extra * 360) / options.pits; // 命令目标的偏差角度
-
-    this.lastIndex = prizeIndex;
-    return baseDeg + deg;
+    if (!_.isArray(options.angles)) {
+      return (extra * CIRCLR_ANGLE) / options.pits;
+    }
+    // 角度不一致
+    var angle = 0;
+    var index;
+    for (var i = 1; i <= extra; i++) {
+      index = (this.lastIndex + i) % options.pits;
+      angle += angles[index];
+    }
+    return angle;
   };
 
   Lottery.prototype.getBezier = function() {
