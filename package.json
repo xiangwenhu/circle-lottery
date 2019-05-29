@@ -1,0 +1,25 @@
+{
+  "name": "circle-lottery",
+  "version": "1.0.0",
+  "description": "转盘抽奖",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiangwenhu/circle-lottery.git"
+  },
+  "keywords": [
+    "lottery"
+  ],
+  "author": "xiangwenhu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiangwenhu/circle-lottery/issues"
+  },
+  "homepage": "https://github.com/xiangwenhu/circle-lottery#readme"
+}
