@@ -28,6 +28,7 @@
   };
 
   var CIRCLR_ANGLE = 360;
+  var EPSILON = 1;
 
   var BUILTIN_BEZIER = [
     ".23,1,.32,1", // ease-out-quint
@@ -101,9 +102,9 @@
         ? prizeIndex - this.lastIndex
         : options.pits + prizeIndex - this.lastIndex;
     var deg =
-    CIRCLR_ANGLE * options.minCycles + // 最小圈数
-    CIRCLR_ANGLE * Math.trunc(options.pits * Math.random()) + // 随机圈数
-      (extra * CIRCLR_ANGLE) / options.pits; // 命令目标的偏差角度
+      360 * options.minCycles + // 最小圈数
+      360 * Math.trunc(options.pits * Math.random()) + // 随机圈数
+      (extra * 360) / options.pits; // 命令目标的偏差角度
 
     this.lastIndex = prizeIndex;
     return baseDeg + deg;

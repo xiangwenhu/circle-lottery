@@ -44,7 +44,7 @@ document.querySelector(".draw-btn").addEventListener("click", function() {
 
 
 ## 特点
-1. 带
+1. 代码少
 2. 逻辑分离，修改简单
 3. 接入简单
 4. 内置贝塞尔timing function
