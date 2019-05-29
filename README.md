@@ -3,8 +3,8 @@
 
 ## 使用
 演示效果：  
-![xx](./docs/cLottery.gif)
-演示地址：   
+![xx](./docs/cLottery.gif)   
+演示地址： https://xiangwenhu.github.io/circle-lottery/  
 html
 ```html
 <div class="draw-container">
