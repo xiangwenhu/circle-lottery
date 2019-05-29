@@ -18,6 +18,7 @@ body {
     width: 400px;
     height: 400px;
     z-index: 10;
+    transform: rotate(30deg)
 }
 
 .draw-btn {

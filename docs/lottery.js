@@ -1,4 +1,4 @@
-const PRIZE_COUNT = 9;
+const PRIZE_COUNT = 6;
 let enabledDraw = true;
 
 const prizesEl = document.querySelector(".draw-prizes");
@@ -16,7 +16,7 @@ document.querySelector(".draw-btn").addEventListener("click", function() {
     return;
   }
   // 设置奖项
-  const indexes = [1];
+  const indexes = [2];
   lottery.setPrize(indexes);
   lottery.start();
 });

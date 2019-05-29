@@ -24,6 +24,33 @@
       }
       // TODO:: getComputedStyle后补
       return 0;
+    },
+    getRotate: function(el) {
+      try {
+        var styles = window.getComputedStyle(el, null);
+        var tr = styles.getPropertyValue("transform");
+
+        if (tr === "none" || !tr) {
+          return 0;
+        }
+
+        var values = tr
+          .split("(")[1]
+          .split(")")[0]
+          .split(",");
+        var a = values[0];
+        var b = values[1];
+        var c = values[2];
+        var d = values[3];
+
+        var scale = Math.sqrt(a * a + b * b);
+
+        var sin = b / scale;
+        var angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+        return angle;
+      } catch (err) {
+        return 0;
+      }
     }
   };
 
@@ -60,8 +87,19 @@
     this.processing = false;
     // 上次停留位置
     this.lastIndex = 0;
+    // 初始角度
+    this.initialAngle = -1;
+
     this.registerEvents();
   }
+
+  Lottery.prototype.getRevisedAngle = function() {
+    if (this.initialAngle < 0) {
+      this.initialAngle = _.getRotate(this.el);
+      return this.initialAngle;
+    }
+    return 0;
+  };
 
   Lottery.prototype.registerEvents = function() {
     var that = this;
@@ -86,7 +124,7 @@
 
   Lottery.prototype.startAnimate = function() {
     var el = this.el;
-    var angle = this.getAngle();
+    var angle = this.getAngle() + this.getRevisedAngle();
     var bezier = this.getBezier();
     var timing = this.options.timing;
     el.style.transform = "rotate(" + angle + "deg)";
