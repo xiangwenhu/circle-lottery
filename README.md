@@ -41,13 +41,26 @@ document.querySelector(".draw-btn").addEventListener("click", function() {
 });
 
 ```
+##参数
+* beziers: Array   
+自定义贝塞尔
+* minCycles: number  
+最小圈数
+* maxCycles：number   
+最大圈数   
+* pits: number  
+奖品数
+* timing: number  
+旋转时间
+
 
 
 ## 特点
 1. 代码少
-2. 逻辑分离，修改简单
-3. 接入简单
-4. 内置贝塞尔timing function
+2. 接入简单
+3. 内置贝塞尔timing function
+4. 支持转盘本身有rotate角度
+5. 支持转盘每个奖项占用角度不相同
 
 
 
@@ -59,5 +72,3 @@ document.querySelector(".draw-btn").addEventListener("click", function() {
 
 
 ## 待解决
-1. 转盘本身有rotate角度
-2. 转盘每个奖项占用角度不相同

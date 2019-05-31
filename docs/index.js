@@ -72,8 +72,10 @@
   var defaultOption = {
     timing: 5000, // 单次抽奖转动时间
     pits: 8, // 总坑数
-    beziers: BUILTIN_BEZIER,
-    minCycles: 5
+    beziers: BUILTIN_BEZIER, // 内置内赛尔
+    minCycles: 5, // 最小圈数
+    maxCycles: 10, // 最大圈数
+    angles: undefined // 角度数组，当奖项占的角度一致时使用
     //onStart: null, // 当开始
     //onEnded: null,  // 结束
     //onError: null  // 异常
@@ -140,33 +142,45 @@
     var prizeIndex = this.prizeIndexes[0];
     var baseDeg = _.getRatoteAngle(this.el);
     var deviationAngle = this.getDeviation();
-    var deg =
-      CIRCLR_ANGLE *
-        (options.minCycles + Math.trunc(options.pits * Math.random())) +
-      deviationAngle; // 命令目标的偏差角度
+    var deg = CIRCLR_ANGLE * this.getCycles() + deviationAngle; // 命令目标的偏差角度
 
     this.lastIndex = prizeIndex;
     return baseDeg + deg;
+  };
+
+  Lottery.prototype.getCycles = function() {
+    var options = this.options;
+    var maxCycles = options.maxCycles;
+    var randomCycles =
+      options.minCycles + Math.trunc(options.pits * Math.random());
+    return Math.min(maxCycles, randomCycles);
   };
 
   Lottery.prototype.getDeviation = function() {
     var options = this.options;
     var angles = options.angles;
     var prizeIndex = this.prizeIndexes[0];
-    // 角度一致
+
     var extra =
       prizeIndex >= this.lastIndex
         ? prizeIndex - this.lastIndex
         : options.pits + prizeIndex - this.lastIndex;
+
+    if (extra === 0) {
+      return 0;
+    }
+
+    // 角度一致
     if (!_.isArray(options.angles)) {
       return (extra * CIRCLR_ANGLE) / options.pits;
     }
-    // 角度不一致
-    var angle = 0;
+
+    // 角度不一致 ， 开始/2 + 途径 +  结束/2
+    var angle = angles[this.lastIndex] / 2;
     var index;
     for (var i = 1; i <= extra; i++) {
       index = (this.lastIndex + i) % options.pits;
-      angle += angles[index];
+      angle += i === extra ? angles[index] / 2 : angles[index];
     }
     return angle;
   };

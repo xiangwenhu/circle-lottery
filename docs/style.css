@@ -12,6 +12,8 @@ body {
     position: relative;
     background-position: center;
     margin: 10px;
+    width: 400px;
+    margin: auto;
 }
 
 .draw-prizes {  
@@ -24,7 +26,7 @@ body {
 .draw-btn {
     position: absolute;
     top: 47%;
-    left: 50%;
+    left: 51.25%;
     transform: translate(-50%, -50%) rotate(0);
     width: 85px;
     z-index: 20;
