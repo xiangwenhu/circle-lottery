@@ -1,5 +1,5 @@
 # 转盘抽奖逻辑
-该库仅仅分离了转盘转动的逻辑，就是不处理UI.   
+该库适用指针转动或者转盘转动的转盘抽奖。不负责UI。
 
 ## 使用
 演示效果：  
@@ -61,6 +61,7 @@ document.querySelector(".draw-btn").addEventListener("click", function() {
 3. 内置贝塞尔timing function
 4. 支持转盘本身有rotate角度
 5. 支持转盘每个奖项占用角度不相同
+6. 适用指针转动或者转盘转动
 
 
 
