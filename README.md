@@ -1,6 +1,14 @@
 # 转盘抽奖逻辑
 该库适用指针转动或者转盘转动的转盘抽奖。不负责UI。
 
+## 特点
+1. 不依赖任何库
+2. 内置贝塞尔timing function
+3. 支持转盘本身有rotate角度
+4. 支持转盘每个奖项占用角度不相同
+5. 适用指针转动或者转盘转动
+6. 代码少
+
 ## 使用
 演示效果：  
 ![xx](./docs/cLottery.gif)   
@@ -52,17 +60,6 @@ document.querySelector(".draw-btn").addEventListener("click", function() {
 奖品数
 * timing: number  
 旋转时间
-
-
-
-## 特点
-1. 代码少
-2. 接入简单
-3. 内置贝塞尔timing function
-4. 支持转盘本身有rotate角度
-5. 支持转盘每个奖项占用角度不相同
-6. 适用指针转动或者转盘转动
-
 
 
 ## 思路：

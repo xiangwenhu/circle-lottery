@@ -1,6 +1,6 @@
 {
   "name": "circle-lottery",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "转盘抽奖",
   "main": "index.js",
   "scripts": {
