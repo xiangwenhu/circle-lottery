@@ -72,4 +72,15 @@ document.querySelector(".draw-btn").addEventListener("click", function() {
 
 
 
-## 待解决
+## 注意事项
+1. 如果被旋转的元素transform有除了rotate其他设置选项，请直接写在内联style上面。   
+比如： 被旋转的指针还有translate设置。  
+`transform: translate(-50%, -50%) rotate(0);`   
+应该如下编写, 而不该写到css文件或者style标签里面：
+`<img src="./images/btn-draw.png" class="draw-btn" alt="" style="transform: translate(-50%, -50%) rotate(0);">`
+2. 奖项设置    
+   如果是转盘转动，奖项的设置索引顺序逆时针设置，如下：  
+    <br>
+   <img src="https://xiangwenhu.github.io/circle-lottery/images/prizes-2.jpg" style="transform: rotate(30deg)" height="150px">
+   <br> <br>
+   如果是指针转动，奖项索引顺序顺时针设置。

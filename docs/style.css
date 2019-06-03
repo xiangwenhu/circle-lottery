@@ -27,7 +27,7 @@ body {
     position: absolute;
     top: 47%;
     left: 51.25%;
-    transform: translate(-50%, -50%) rotate(0);
+    /* transform: translate(-50%, -50%) rotate(0);  */
     width: 85px;
     z-index: 20;
 }

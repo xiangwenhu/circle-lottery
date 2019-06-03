@@ -1,7 +1,7 @@
 const PRIZE_COUNT = 6;
 let enabledDraw = true;
 
-const prizesEl = document.querySelector(".draw-prizes");
+const prizesEl = document.querySelector(".draw-btn");
 
 let lottery = new Lottery(prizesEl, {
   pits: PRIZE_COUNT,

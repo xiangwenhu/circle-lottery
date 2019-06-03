@@ -1,11 +1,20 @@
 (function() {
   var proto = Object.prototype;
+  var slice = Array.prototype.slice;
+  var REG_ROTATE = /rotate\([-+]?\d+deg\)/i;
+
   var _ = {
     isFunction: function isFunction(fn) {
       return typeof fn === "function" || fn instanceof Function;
     },
     isArray: function(obj) {
       return proto.toString.call(obj) === "[object Array]";
+    },
+    getRandomIndex(len) {
+      return Math.floor(Math.random() * len);
+    },
+    getRandomValue(arr) {
+      return arr[_.getRandomIndex(arr.length)];
     },
     extend: function extend(target) {
       if (arguments.length < 2) {
@@ -21,7 +30,7 @@
       return target;
     },
     getRatoteAngle: function getRatoteAngle(el) {
-      var reg = /rotate\((\d{0,})deg\)/g;
+      var reg = /rotate\(([-+]?\d+)deg\)/g;
       var r = reg.exec(el.style.transform);
       if (r !== null) {
         return +r[1];
@@ -33,7 +42,6 @@
       try {
         var styles = window.getComputedStyle(el, null);
         var tr = styles.getPropertyValue("transform");
-
         if (tr === "none" || !tr) {
           return 0;
         }
@@ -48,7 +56,6 @@
         var d = values[3];
 
         var scale = Math.sqrt(a * a + b * b);
-
         var sin = b / scale;
         var angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
         return angle;
@@ -59,8 +66,6 @@
   };
 
   var CIRCLR_ANGLE = 360;
-  var EPSILON = 1;
-
   var BUILTIN_BEZIER = [
     ".23,1,.32,1", // ease-out-quint
     ".19,1,.22,1", // ease-out-expo,
@@ -81,8 +86,6 @@
     //onError: null  // 异常
   };
 
-  var slice = Array.prototype.slice;
-
   function Lottery(el, options) {
     this.el = el;
     this.originOptions = options;
@@ -95,7 +98,6 @@
     this.lastIndex = 0;
     // 初始角度
     this.initialAngle = -1;
-
     this.registerEvents();
   }
 
@@ -109,10 +111,11 @@
 
   Lottery.prototype.registerEvents = function() {
     var that = this;
-    var el = this.el;
-    el.addEventListener("transitionend", function() {
-      that.processing = false;
-      that.emit("Ended", this);
+    this.el.addEventListener("transitionend", function(ev) {
+      if (ev.propertyName === "transform") {
+        that.processing = false;
+        that.emit("Ended", that);
+      }
     });
   };
 
@@ -133,39 +136,40 @@
     var angle = this.getAngle() + this.getRevisedAngle();
     var bezier = this.getBezier();
     var timing = this.options.timing;
-    el.style.transform = "rotate(" + angle + "deg)";
-    el.style.transition = `transform ${timing}ms cubic-bezier(` + bezier + ")";
+    // 存在transform就替换
+    var strRotate = "rotate(" + angle + "deg)";
+    if (el.style.transform.indexOf("rotate") >= 0) {
+      el.style.transform = el.style.transform.replace(REG_ROTATE, strRotate);
+    } else {
+      el.style.transform = strRotate;
+    }
+    el.style.transition =
+      "transform " + timing + "ms cubic-bezier(" + bezier + ")";
   };
 
   Lottery.prototype.getAngle = function() {
     var options = this.options;
-    var prizeIndex = this.prizeIndexes[0];
     var baseDeg = _.getRatoteAngle(this.el);
     var deviationAngle = this.getDeviation();
-    var deg = CIRCLR_ANGLE * this.getCycles() + deviationAngle; // 命令目标的偏差角度
-
-    this.lastIndex = prizeIndex;
+    var deg = CIRCLR_ANGLE * this.getCycles() + deviationAngle; // 偏差角度
     return baseDeg + deg;
   };
 
   Lottery.prototype.getCycles = function() {
     var options = this.options;
     var maxCycles = options.maxCycles;
-    var randomCycles =
-      options.minCycles + Math.trunc(options.pits * Math.random());
-    return Math.min(maxCycles, randomCycles);
+    var minCycles = options.minCycles;
+    var randomCycles = minCycles + _.getRandomIndex(maxCycles - minCycles) + 1;
+    return randomCycles;
   };
 
   Lottery.prototype.getDeviation = function() {
     var options = this.options;
     var angles = options.angles;
-    var prizeIndex = this.prizeIndexes[0];
+    var lastIndex = this.lastIndex;
 
-    var extra =
-      prizeIndex >= this.lastIndex
-        ? prizeIndex - this.lastIndex
-        : options.pits + prizeIndex - this.lastIndex;
-
+    var prizeIndex = _.getRandomValue(this.prizeIndexes);
+    var extra = this.getExtraPits(prizeIndex, lastIndex);
     if (extra === 0) {
       return 0;
     }
@@ -176,20 +180,31 @@
     }
 
     // 角度不一致 ， 开始/2 + 途径 +  结束/2
-    var angle = angles[this.lastIndex] / 2;
+    var angle = angles[lastIndex] / 2;
     var index;
     for (var i = 1; i <= extra; i++) {
-      index = (this.lastIndex + i) % options.pits;
+      index = (lastIndex + i) % options.pits;
       angle += i === extra ? angles[index] / 2 : angles[index];
     }
+
+    this.lastIndex = prizeIndex;
     return angle;
+  };
+
+  Lottery.prototype.getExtraPits = function(prizeIndex, lastIndex) {
+    var options = this.options;
+    var extra =
+      prizeIndex >= lastIndex
+        ? prizeIndex - lastIndex
+        : options.pits + prizeIndex - lastIndex;
+    return extra;
   };
 
   Lottery.prototype.getBezier = function() {
     var options = this.options;
     var len = options.beziers.length;
     var beziers = options.beziers;
-    return beziers[Math.round(Math.random() * len)] || beziers[0];
+    return _.getRandomValue(beziers);
   };
 
   Lottery.prototype.getTiming = function() {
@@ -215,7 +230,8 @@
   Lottery.prototype.reset = function() {
     this.stop();
     this.options = _.extend({}, defaultOption, this.originOptions);
-    this.index = 0;
+    this.lastIndex = 0;
+    this.initialAngle = -1;
   };
 
   Lottery.prototype.setPrize = function(prizeIndexes) {
@@ -223,11 +239,6 @@
       return;
     }
     this.prizeIndexes = prizeIndexes;
-  };
-
-  Lottery.prototype.printInfo = function() {
-    var now = Date.now();
-    this.lastTime = now;
   };
 
   window.Lottery = Lottery;
