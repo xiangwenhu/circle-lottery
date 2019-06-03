@@ -22,7 +22,20 @@ function browser() {
 var PRIZE_COUNT = 6;
 var enabledDraw = true;
 
-var prizesEl = document.querySelector(".draw-btn");
+var prizesEl = null;
+
+// 如下是切换旋转方式逻辑
+var rtype = new URL(location).searchParams.get("rtype");
+if (rtype === "1") {
+  radio1.checked = true;
+  prizesEl = document.querySelector(".draw-prizes");
+} else {
+  prizesEl = document.querySelector(".draw-btn");
+}
+typeSelect.addEventListener("change", function(ev) {
+  var val = ev.target.value;
+  location.href = location.href.split("?")[0] + "?rtype=" + val;
+});
 
 var lottery = new Lottery(prizesEl, {
   pits: PRIZE_COUNT,
