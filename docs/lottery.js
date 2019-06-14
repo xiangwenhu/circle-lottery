@@ -63,6 +63,7 @@ btnDraw.addEventListener(eventName, function() {
     if (!enabledDraw) {
         return;
     }
+    enabledDraw = false;
     // 设置奖项
     const indexes = [0, 2, 4];
     lottery.setPrize(indexes);
