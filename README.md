@@ -81,3 +81,8 @@ document.querySelector(".draw-btn").addEventListener("click", function() {
    <img src="https://xiangwenhu.github.io/circle-lottery/images/prizes-2.jpg" style="transform: rotate(30deg)" height="150px">
    <br> <br>
    如果是指针转动，奖项索引顺序顺时针设置。
+
+
+## 已知问题
+1. 移动端首次转动会异常，没有转动预期的角度。   
+   在转动元素上设置 `rotate(0deg)`
