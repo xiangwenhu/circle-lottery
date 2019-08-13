@@ -141,7 +141,7 @@
     if (el.style.transform.indexOf("rotate") >= 0) {
       el.style.transform = el.style.transform.replace(REG_ROTATE, strRotate);
     } else {
-      el.style.transform = strRotate;
+      el.style.transform += strRotate;
     }
     el.style.transition =
       "transform " + timing + "ms cubic-bezier(" + bezier + ")";
