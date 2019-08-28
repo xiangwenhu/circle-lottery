@@ -10,10 +10,10 @@
     isArray: function(obj) {
       return proto.toString.call(obj) === "[object Array]";
     },
-    getRandomIndex(len) {
+    getRandomIndex:function(len) {
       return Math.floor(Math.random() * len);
     },
-    getRandomValue(arr) {
+    getRandomValue:function(arr) {
       return arr[_.getRandomIndex(arr.length)];
     },
     extend: function extend(target) {
